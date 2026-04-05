@@ -23,8 +23,6 @@ class ChatAPI(val chatService: ChatService) {
     @Blocking
     @Produces("application/x-ndjson")
     fun queryModel(body: QueryPayload): RestMulti<ChatEvent> {
-        if (body.persona.isBlank()) throw BadRequestException("persona must be present")
-
         val span = tracer.spanBuilder("API QueryModel")
             .setSpanKind(SpanKind.INTERNAL)
             .startSpan()
@@ -39,4 +37,4 @@ class ChatAPI(val chatService: ChatService) {
     }
 }
 
-data class QueryPayload(val input: String, val persona: String)
+data class QueryPayload(val input: String)

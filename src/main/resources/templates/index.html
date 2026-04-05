@@ -86,35 +86,6 @@
             margin-bottom: 0.5rem;
         }
 
-        .persona-selector {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .persona-option {
-            padding: 0.875rem 1rem;
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            background: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: var(--text-dark);
-        }
-
-        .persona-option:hover {
-            border-color: var(--primary-lavender);
-            background: var(--very-light-lavender);
-        }
-
-        .persona-option.active {
-            background: var(--primary-lavender);
-            color: white;
-            border-color: var(--primary-lavender);
-        }
-
         .sidebar-section {
             padding-top: 1rem;
             border-top: 1px solid var(--border-color);
@@ -191,12 +162,11 @@
         }
 
         .message-bubble {
-            max-width: 70%;
+            min-width: 60px;
             padding: 1rem 1.25rem;
             border-radius: 12px;
             line-height: 1.5;
             font-size: 0.95rem;
-            word-wrap: break-word;
         }
 
         .message.user .message-bubble {
@@ -392,20 +362,6 @@
 
     <div class="container">
         <div class="sidebar">
-            <div>
-                <div class="sidebar-title">Therapeutic Persona</div>
-                <div class="persona-selector">
-                    <button class="persona-option active" data-persona="compassionate-listener">
-                        Compassionate Listener
-                    </button>
-                    <button class="persona-option" data-persona="cognitive-coach">
-                        Cognitive Coach
-                    </button>
-                    <button class="persona-option" data-persona="mindfulness-guide">
-                        Mindfulness Guide
-                    </button>
-                </div>
-            </div>
 
             <div class="sidebar-section">
                 <div class="info-box">
@@ -449,13 +405,6 @@
     </div>
 
     <script>
-        const PERSONAS = {
-            'compassionate-listener': 'Compassionate Listener',
-            'cognitive-coach': 'Cognitive Coach',
-            'mindfulness-guide': 'Mindfulness Guide',
-        };
-
-        let currentPersona = 'compassionate-listener';
         let isLoading = false;
         let lastTraceId = null;
         let messageTimestamps = {};
@@ -472,14 +421,6 @@
             inputField.style.height = Math.min(inputField.scrollHeight, 100) + 'px';
         });
 
-        // Persona selector
-        document.querySelectorAll('.persona-option').forEach(button => {
-            button.addEventListener('click', () => {
-                document.querySelectorAll('.persona-option').forEach(b => b.classList.remove('active'));
-                button.classList.add('active');
-                currentPersona = button.dataset.persona;
-            });
-        });
 
         // Send message
         sendButton.addEventListener('click', sendMessage);
@@ -510,7 +451,6 @@
             try {
                 const payload = {
                     input: message,
-                    persona: currentPersona,
                 };
 
                 const response = await fetch(`{API_URL}`, {
@@ -557,8 +497,8 @@
                         if (!line.trim()) continue;
 
                         try {
+                            console.info(line);
                             const event = JSON.parse(line);
-
 
                             if (event.type === 'start') {
                                 // Session started
@@ -571,7 +511,6 @@
                                     tokensUsed: event.tokensUsed,
                                     timeTaken: event.timeTaken,
                                 };
-                                console.log(stats);
                                 updateSessionInfo(traceId, stats);
                             }
                         } catch (e) {
