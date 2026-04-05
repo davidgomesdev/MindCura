@@ -1,0 +1,43 @@
+quarkus:
+  devservices:
+    enabled: false
+  live-reload:
+    enabled: true
+  otel:
+    logs:
+      enabled: true
+    traces:
+      enabled: true
+    exporter:
+      otlp:
+        endpoint: http://localhost:14317
+  http:
+    host: 0.0.0.0
+    cors:
+      enabled: true
+      origins:
+        - http://localhost:8080
+        - http://127.0.0.1:8080
+        # Dev Compose JS
+        - http://localhost:8081
+        - http://127.0.0.1:8081
+
+model:
+  # options: anthropic
+  name: ollama
+  ollama:
+    base-url: http://127.0.0.1:11434
+    timeout: 600s
+    chat-model:
+      model-id: qwen3:1.7b
+      temperature: 0.7
+      thinking: false
+  anthropic:
+    timeout: 60s
+    api-key: REPLACE_ME
+    chat-model:
+      # options (api alias): https://platform.claude.com/docs/en/about-claude/models/overview#latest-models-comparison
+      model-id: claude-haiku-4-5
+      temperature: 0.7
+      thinking: true
+      max-tokens: 50000
